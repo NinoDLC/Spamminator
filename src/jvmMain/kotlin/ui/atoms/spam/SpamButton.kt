@@ -1,6 +1,7 @@
 package ui.atoms.spam
 
 import DI
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,6 +61,23 @@ fun SpamButton(stationEntity: StationEntity, displayIcon: Boolean = false) {
             )
         }
     }
+}
+
+@Preview
+@Composable
+fun SpamButtonPreview() {
+    SpamButton(
+        stationEntity = DI.stationRepository.getStationEntity("1")
+    )
+}
+
+@Preview
+@Composable
+fun SpamButtonWithIconPreview() {
+    SpamButton(
+        stationEntity = DI.stationRepository.getStationEntity("1"),
+        displayIcon = true
+    )
 }
 
 private fun loadNetworkImage(link: String): ImageBitmap {

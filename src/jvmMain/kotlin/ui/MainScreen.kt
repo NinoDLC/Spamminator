@@ -1,10 +1,13 @@
 package ui
 
 import DI
+import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,13 +23,16 @@ import ui.utils.FlowRow
 import ui.utils.FlowVerticalAlignment
 import ui.utils.SizeMode
 
+@Preview
 @Composable
 fun MainScreen() {
     val liveInfoRepository = DI.liveInfoRepository
     val stationRepository = DI.stationRepository
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row {
@@ -235,83 +241,3 @@ fun MainScreen() {
         }
     }
 }
-
-private val mainStationIds = listOf(
-    "1",
-    "2",
-    "7",
-    "64",
-    "65",
-    "66",
-    "74",
-    "78",
-    "69",
-    "71",
-    "70",
-    "77",
-    "95",
-    "5",
-    "11",
-    "12",
-    "13",
-    "14",
-    "15",
-    "16",
-    "17",
-    "18",
-    "19",
-    "20",
-    "21",
-    "22",
-    "23",
-    "24",
-    "25",
-    "26",
-    "27",
-    "28",
-    "29",
-    "30",
-    "31",
-    "32",
-    "33",
-    "34",
-    "36",
-    "37",
-    "38",
-    "39",
-    "40",
-    "41",
-    "42",
-    "43",
-    "44",
-    "45",
-    "46",
-    "47",
-    "48",
-    "49",
-    "50",
-    "54",
-    "68",
-    "90",
-    "91",
-    "92",
-    "93",
-    "4",
-    "401",
-    "409",
-    "408",
-    "402",
-    "403",
-    "405",
-    "406",
-    "404",
-    "407",
-    "6",
-    "605",
-    "75",
-    "601",
-    "606",
-    "604",
-    "603",
-    "602",
-)
