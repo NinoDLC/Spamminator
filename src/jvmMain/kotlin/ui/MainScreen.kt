@@ -8,15 +8,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import data.station.StationRepository
 import ui.atoms.presets.PresetCheckBoxes
 import ui.atoms.spam.SpamButton
 import ui.utils.FlowHorizontalAlignment
@@ -32,39 +31,51 @@ fun MainScreen() {
     val stationRepository = DI.stationRepository
     val spamRepository = DI.spamRepository
 
+    val mainStations = getMainStations(stationRepository)
+    val fipStations = getFipStations(stationRepository)
+    val musiqueStations = getMusiqueStations(stationRepository)
+    val mouvStations = getMouvStations(stationRepository)
+    val bleuStations = getBleuStations(stationRepository)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            PresetCheckBoxes()
+
+            Button(
+                onClick = {
+                    mainStations.forEach { spamRepository.toggleSpam(it) }
+                    fipStations.forEach { spamRepository.toggleSpam(it) }
+                    musiqueStations.forEach { spamRepository.toggleSpam(it) }
+                    mouvStations.forEach { spamRepository.toggleSpam(it) }
+                    bleuStations.forEach { spamRepository.toggleSpam(it) }
+                },
+            ) {
+                Text("Spam all!")
+            }
+
             val totalCalls = liveInfoRepository.totalCallsFlow.collectAsState(0)
             Text(
-                modifier = Modifier.weight(1F).padding(8.dp),
+                modifier = Modifier.padding(8.dp),
                 text = "Total calls = ${totalCalls.value}",
                 textAlign = TextAlign.End
             )
 
             val totalFails = liveInfoRepository.totalFailsFlow.collectAsState(0)
             Text(
-                modifier = Modifier.weight(1F).padding(8.dp),
+                modifier = Modifier.padding(8.dp),
                 text = "Total fails = ${totalFails.value}",
                 textAlign = TextAlign.Start
             )
         }
 
-        PresetCheckBoxes()
-
         // Main
-        val mainStations = listOf(
-            stationRepository.getStationEntity("1"),
-            stationRepository.getStationEntity("2"),
-            stationRepository.getStationEntity("7"),
-            stationRepository.getStationEntity("5"),
-            stationRepository.getStationEntity("4"),
-            stationRepository.getStationEntity("6"),
-        )
         Card(
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp,
@@ -96,18 +107,6 @@ fun MainScreen() {
         }
 
         // FIP
-        val fipStations = listOf(
-            stationRepository.getStationEntity("64"),
-            stationRepository.getStationEntity("65"),
-            stationRepository.getStationEntity("66"),
-            stationRepository.getStationEntity("74"),
-            stationRepository.getStationEntity("78"),
-            stationRepository.getStationEntity("69"),
-            stationRepository.getStationEntity("71"),
-            stationRepository.getStationEntity("70"),
-            stationRepository.getStationEntity("77"),
-            stationRepository.getStationEntity("95"),
-        )
         Card(
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp,
@@ -139,17 +138,6 @@ fun MainScreen() {
         }
 
         // Musique
-        val musiqueStations = listOf(
-            stationRepository.getStationEntity("401"),
-            stationRepository.getStationEntity("409"),
-            stationRepository.getStationEntity("408"),
-            stationRepository.getStationEntity("402"),
-            stationRepository.getStationEntity("403"),
-            stationRepository.getStationEntity("405"),
-            stationRepository.getStationEntity("406"),
-            stationRepository.getStationEntity("404"),
-            stationRepository.getStationEntity("407"),
-        )
         Card(
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp,
@@ -181,15 +169,6 @@ fun MainScreen() {
         }
 
         // Mouv
-        val mouvStations = listOf(
-            stationRepository.getStationEntity("605"),
-            stationRepository.getStationEntity("75"),
-            stationRepository.getStationEntity("601"),
-            stationRepository.getStationEntity("606"),
-            stationRepository.getStationEntity("604"),
-            stationRepository.getStationEntity("603"),
-            stationRepository.getStationEntity("602"),
-        )
         Card(
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp,
@@ -221,53 +200,6 @@ fun MainScreen() {
         }
 
         // Bleu
-        val bleuStations = listOf(
-            stationRepository.getStationEntity("11"),
-            stationRepository.getStationEntity("12"),
-            stationRepository.getStationEntity("13"),
-            stationRepository.getStationEntity("14"),
-            stationRepository.getStationEntity("15"),
-            stationRepository.getStationEntity("16"),
-            stationRepository.getStationEntity("17"),
-            stationRepository.getStationEntity("18"),
-            stationRepository.getStationEntity("19"),
-            stationRepository.getStationEntity("20"),
-            stationRepository.getStationEntity("21"),
-            stationRepository.getStationEntity("22"),
-            stationRepository.getStationEntity("23"),
-            stationRepository.getStationEntity("24"),
-            stationRepository.getStationEntity("25"),
-            stationRepository.getStationEntity("26"),
-            stationRepository.getStationEntity("27"),
-            stationRepository.getStationEntity("28"),
-            stationRepository.getStationEntity("29"),
-            stationRepository.getStationEntity("30"),
-            stationRepository.getStationEntity("31"),
-            stationRepository.getStationEntity("32"),
-            stationRepository.getStationEntity("33"),
-            stationRepository.getStationEntity("34"),
-            stationRepository.getStationEntity("36"),
-            stationRepository.getStationEntity("37"),
-            stationRepository.getStationEntity("38"),
-            stationRepository.getStationEntity("39"),
-            stationRepository.getStationEntity("40"),
-            stationRepository.getStationEntity("41"),
-            stationRepository.getStationEntity("42"),
-            stationRepository.getStationEntity("43"),
-            stationRepository.getStationEntity("44"),
-            stationRepository.getStationEntity("45"),
-            stationRepository.getStationEntity("46"),
-            stationRepository.getStationEntity("47"),
-            stationRepository.getStationEntity("48"),
-            stationRepository.getStationEntity("49"),
-            stationRepository.getStationEntity("50"),
-            stationRepository.getStationEntity("54"),
-            stationRepository.getStationEntity("68"),
-            stationRepository.getStationEntity("90"),
-            stationRepository.getStationEntity("91"),
-            stationRepository.getStationEntity("92"),
-            stationRepository.getStationEntity("93"),
-        )
         Card(
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp,
@@ -299,3 +231,95 @@ fun MainScreen() {
         }
     }
 }
+
+private fun getMainStations(stationRepository: StationRepository) = listOf(
+    stationRepository.getStationEntity("1"),
+    stationRepository.getStationEntity("2"),
+    stationRepository.getStationEntity("7"),
+    stationRepository.getStationEntity("5"),
+    stationRepository.getStationEntity("4"),
+    stationRepository.getStationEntity("6"),
+)
+
+private fun getFipStations(stationRepository: StationRepository) = listOf(
+    stationRepository.getStationEntity("64"),
+    stationRepository.getStationEntity("65"),
+    stationRepository.getStationEntity("66"),
+    stationRepository.getStationEntity("74"),
+    stationRepository.getStationEntity("78"),
+    stationRepository.getStationEntity("69"),
+    stationRepository.getStationEntity("71"),
+    stationRepository.getStationEntity("70"),
+    stationRepository.getStationEntity("77"),
+    stationRepository.getStationEntity("95"),
+)
+
+private fun getMusiqueStations(stationRepository: StationRepository) = listOf(
+    stationRepository.getStationEntity("401"),
+    stationRepository.getStationEntity("409"),
+    stationRepository.getStationEntity("408"),
+    stationRepository.getStationEntity("402"),
+    stationRepository.getStationEntity("403"),
+    stationRepository.getStationEntity("405"),
+    stationRepository.getStationEntity("406"),
+    stationRepository.getStationEntity("404"),
+    stationRepository.getStationEntity("407"),
+)
+
+private fun getMouvStations(stationRepository: StationRepository) = listOf(
+    stationRepository.getStationEntity("605"),
+    stationRepository.getStationEntity("75"),
+    stationRepository.getStationEntity("601"),
+    stationRepository.getStationEntity("606"),
+    stationRepository.getStationEntity("604"),
+    stationRepository.getStationEntity("603"),
+    stationRepository.getStationEntity("602"),
+)
+
+private fun getBleuStations(stationRepository: StationRepository) = listOf(
+    stationRepository.getStationEntity("11"),
+    stationRepository.getStationEntity("12"),
+    stationRepository.getStationEntity("13"),
+    stationRepository.getStationEntity("14"),
+    stationRepository.getStationEntity("15"),
+    stationRepository.getStationEntity("16"),
+    stationRepository.getStationEntity("17"),
+    stationRepository.getStationEntity("18"),
+    stationRepository.getStationEntity("19"),
+    stationRepository.getStationEntity("20"),
+    stationRepository.getStationEntity("21"),
+    stationRepository.getStationEntity("22"),
+    stationRepository.getStationEntity("23"),
+    stationRepository.getStationEntity("24"),
+    stationRepository.getStationEntity("25"),
+    stationRepository.getStationEntity("26"),
+    stationRepository.getStationEntity("27"),
+    stationRepository.getStationEntity("28"),
+    stationRepository.getStationEntity("29"),
+    stationRepository.getStationEntity("30"),
+    stationRepository.getStationEntity("31"),
+    stationRepository.getStationEntity("32"),
+    stationRepository.getStationEntity("33"),
+    stationRepository.getStationEntity("34"),
+    stationRepository.getStationEntity("36"),
+    stationRepository.getStationEntity("37"),
+    stationRepository.getStationEntity("38"),
+    stationRepository.getStationEntity("39"),
+    stationRepository.getStationEntity("40"),
+    stationRepository.getStationEntity("41"),
+    stationRepository.getStationEntity("42"),
+    stationRepository.getStationEntity("43"),
+    stationRepository.getStationEntity("44"),
+    stationRepository.getStationEntity("45"),
+    stationRepository.getStationEntity("46"),
+    stationRepository.getStationEntity("47"),
+    stationRepository.getStationEntity("48"),
+    stationRepository.getStationEntity("49"),
+    stationRepository.getStationEntity("50"),
+    stationRepository.getStationEntity("54"),
+    stationRepository.getStationEntity("68"),
+    stationRepository.getStationEntity("90"),
+    stationRepository.getStationEntity("91"),
+    stationRepository.getStationEntity("92"),
+    stationRepository.getStationEntity("93"),
+)
