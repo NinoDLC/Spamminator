@@ -31,6 +31,7 @@ import javax.imageio.ImageIO
 
 @Composable
 fun SpamButton(stationEntity: StationEntity, displayIcon: Boolean = false) {
+    val ioDispatcher = DI.ioDispatcher
     val spamViewModel = DI.getSpamViewModel(stationEntity)
 
     Button(
@@ -51,7 +52,7 @@ fun SpamButton(stationEntity: StationEntity, displayIcon: Boolean = false) {
                     contentDescription = null
                 )
             }
-            val spamCount: State<Int?> = spamViewModel.spamCountFlow.collectAsState(null, Dispatchers.IO)
+            val spamCount: State<Int?> = spamViewModel.spamCountFlow.collectAsState(null, ioDispatcher)
             Text(
                 if (spamCount.value == null) {
                     "Spam ${stationEntity.name}"
