@@ -1,7 +1,8 @@
 package data.preset
 
+import kotlinx.coroutines.flow.MutableStateFlow
 import ui.atoms.presets.Preset
 
 class PresetRepository {
-    var preset: Preset = Preset.X3
+    val presetsFlow = MutableStateFlow(Preset.values().toList())
 }

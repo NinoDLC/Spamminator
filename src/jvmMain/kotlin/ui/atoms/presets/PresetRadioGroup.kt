@@ -6,35 +6,42 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Card
-import androidx.compose.material.RadioButton
+import androidx.compose.material.Checkbox
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.flow.update
 
 @Composable
-fun PresetRadioGroup() {
+fun PresetCheckBoxes() {
     Card(Modifier.padding(8.dp)) {
         Column(Modifier.padding(8.dp)) {
             Text("Preset")
 
             val presetRepository = DI.presetRepository
 
-            var selectedPreset by remember { mutableStateOf(presetRepository.preset) }
+            val selectedPresets = presetRepository.presetsFlow.collectAsState()
             Row(
                 modifier = Modifier.selectableGroup(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Preset.values().forEach {
-                    RadioButton(
-                        selected = it == selectedPreset,
-                        onClick = {
-                            selectedPreset = it
-                            presetRepository.preset = it
+                Preset.values().forEach { preset ->
+                    Checkbox(
+                        checked = selectedPresets.value.contains(preset),
+                        onCheckedChange = {
+                            presetRepository.presetsFlow.update {
+                                if (selectedPresets.value.contains(preset)) {
+                                    it - preset
+                                } else {
+                                    it + preset
+                                }
+                            }
                         }
                     )
-                    Text(text = it.label)
+                    Text(text = preset.label)
                 }
             }
         }

@@ -2,37 +2,46 @@ package domain
 
 import data.liveinfo.LiveInfoRepository
 import data.preset.PresetRepository
-import data.station.model.StationEntity
+import data.spam.SpamRepository
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.conflate
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.time.Duration.Companion.seconds
 
 class SpamLiveInfoUseCase(
+    private val spamRepository: SpamRepository,
     private val liveInfoRepository: LiveInfoRepository,
     private val presetRepository: PresetRepository,
 ) {
 
-    fun getSpamCountFlow(stationEntity: StationEntity): Flow<Int> = channelFlow {
-        trySend(0)
-        val count = AtomicInteger(0)
+    fun getSpamCountFlow(stationId: String): Flow<Int?> = channelFlow {
+        spamRepository.stationSpammedMapStateFlow
+            .map { stations -> stations.find { it.id == stationId } }
+            .distinctUntilChanged()
+            .collectLatest { stationEntity ->
+                if (stationEntity != null) {
+                    trySend(0)
+                    val count = AtomicInteger(0)
 
-        while (true) {
-            launch {
-                liveInfoRepository.getLiveInfo(
-                    stationId = stationEntity.id,
-                    rule = stationEntity.liveRule,
-                    date = null,
-                    preset = presetRepository.preset.value
-                )
+                    while (true) {
+                        presetRepository.presetsFlow.value.forEach {
+                            launch {
+                                liveInfoRepository.getLiveInfo(
+                                    stationId = stationEntity.id,
+                                    rule = stationEntity.liveRule,
+                                    date = null,
+                                    preset = it.value
+                                )
+                                trySend(count.incrementAndGet())
+                            }
+                        }
 
-                trySend(count.incrementAndGet())
+                        delay(10.seconds)
+                    }
+                } else {
+                    trySend(null)
+                }
             }
-
-            delay(1.seconds)
-        }
     }.conflate()
 }

@@ -33,7 +33,6 @@ import javax.imageio.ImageIO
 fun SpamButton(stationEntity: StationEntity, displayIcon: Boolean = false) {
     val spamViewModel = DI.getSpamViewModel(stationEntity)
 
-    val spamCount: State<Int?> = spamViewModel.spamCountFlow.collectAsState(null, Dispatchers.IO)
     Button(
         colors = ButtonDefaults.buttonColors(
             backgroundColor = Color(0.7F, 0.7F, 0.7F, 0.3F).compositeOver(Color(stationEntity.color))
@@ -52,6 +51,7 @@ fun SpamButton(stationEntity: StationEntity, displayIcon: Boolean = false) {
                     contentDescription = null
                 )
             }
+            val spamCount: State<Int?> = spamViewModel.spamCountFlow.collectAsState(null, Dispatchers.IO)
             Text(
                 if (spamCount.value == null) {
                     "Spam ${stationEntity.name}"

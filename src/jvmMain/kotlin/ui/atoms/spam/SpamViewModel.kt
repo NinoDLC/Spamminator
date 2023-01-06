@@ -1,27 +1,20 @@
 package ui.atoms.spam
 
+import data.spam.SpamRepository
 import data.station.model.StationEntity
 import domain.SpamLiveInfoUseCase
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 
-@Suppress("OPT_IN_USAGE")
 // TODO NINO Use Voyager for VM injection: https://github.com/Syer10/voyager
 class SpamViewModel(
-    stationEntity: StationEntity,
-    private val spamLiveInfoUseCase: SpamLiveInfoUseCase
+    spamLiveInfoUseCase: SpamLiveInfoUseCase,
+    private val stationEntity: StationEntity,
+    private val spamRepository: SpamRepository,
 ) {
 
-    private val isSpammingMutableStateFlow = MutableStateFlow(false)
-
-    val spamCountFlow: Flow<Int?> = isSpammingMutableStateFlow.flatMapLatest { isSpamming ->
-        if (isSpamming) {
-            spamLiveInfoUseCase.getSpamCountFlow(stationEntity)
-        } else {
-            flowOf(null)
-        }
-    }
+    val spamCountFlow: Flow<Int?> = spamLiveInfoUseCase.getSpamCountFlow(stationEntity.id)
 
     fun onClick() {
-        isSpammingMutableStateFlow.value = !isSpammingMutableStateFlow.value
+        spamRepository.toggleSpam(stationEntity)
     }
 }

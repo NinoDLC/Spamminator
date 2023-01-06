@@ -1,6 +1,5 @@
 package data.liveinfo
 
-import data.liveinfo.model.LiveInfoEntity
 import io.ktor.client.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -18,9 +17,8 @@ class LiveInfoRepository(
     private val totalFailsMutableStateFlow = MutableStateFlow(0)
     val totalFailsFlow: Flow<Int> = totalFailsMutableStateFlow
 
-    suspend fun getLiveInfo(stationId: String, rule: String, date: Long?, preset: String): LiveInfoEntity? {
+    suspend fun getLiveInfo(stationId: String, rule: String, date: Long?, preset: String) {
         println("getLiveInfo() called with: stationId = $stationId, rule = $rule, date = $date, preset = $preset")
-        totalCallsMutableStateFlow.update { it + 1 }
 
         val httpResponse = httpClient.get("https://api.radiofrance.fr/livemeta/live/$stationId/$rule") {
             headers {
@@ -32,12 +30,11 @@ class LiveInfoRepository(
                 date?.let { parameters.append("date", date.toString()) }
             }
         }
+        totalCallsMutableStateFlow.update { it + 1 }
         println("getLiveInfo() SUCCESS with: stationId = $stationId, rule = $rule, date = $date, preset = $preset")
 
         if (!httpResponse.status.isSuccess()) {
             totalFailsMutableStateFlow.update { it + 1 }
         }
-
-        return null
     }
 }
