@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "fr.radiofrance"
-version = "1.1"
+version = "1.2"
 
 repositories {
     google()
@@ -48,7 +48,7 @@ compose.desktop {
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Spamminator"
-            packageVersion = "1.1.0"
+            packageVersion = "1.2.0"
         }
     }
 }
