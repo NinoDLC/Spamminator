@@ -36,7 +36,6 @@ kotlin {
                 implementation("io.ktor:ktor-client-logging:$ktorVersion")
 
                 implementation("org.slf4j:slf4j-simple:2.0.3")
-                implementation("com.google.accompanist:accompanist-flowlayout:0.27.0")
             }
         }
         val jvmTest by getting
